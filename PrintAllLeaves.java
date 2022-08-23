@@ -1,8 +1,8 @@
-// In-order traversal of binary trees
+// Print out all leaves of a binary tree
 
 import java.util.Stack;
 
-public class InOrderTraversal {
+public class PrintAllLeaves {
   static TreeNode root;
 
   public static void main(String[] args) {
@@ -13,36 +13,18 @@ public class InOrderTraversal {
     root.right().addLeft(new TreeNode(4));
     root.right().addRight(new TreeNode(5));
 
-    inOrderTraversal(root);
-    System.out.println();
-    inOrderTraversal2(root);
-    // output: 3 1 0 4 2 5
+    printAllLeaves(root);
+    // output: 3 4 5
   }
 
-  static void inOrderTraversal(TreeNode node) {
+  static void printAllLeaves (TreeNode node) {
     if (node == null) return;
 
-    inOrderTraversal(node.left());
-    System.out.print(node.data() + " ");
-    inOrderTraversal(node.right());
-  }
+    if (node.left() == null && node.right() == null)
+      System.out.print(node.data() + " ");
 
-  static void inOrderTraversal2(TreeNode node) {
-    if (node == null) return;
-
-    Stack<TreeNode> stack = new Stack<>();
-
-    TreeNode temp = node;
-    while (temp != null || !stack.isEmpty()) {
-      if (temp != null) {
-        stack.push(temp);
-        temp = temp.left();
-      } else {
-        temp = stack.pop();
-        System.out.print(temp.data() + " ");
-        temp = temp.right();
-      }
-    }
+    printAllLeaves(node.left());
+    printAllLeaves(node.right());
   }
 
 }
