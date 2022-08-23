@@ -1,3 +1,5 @@
 # ignore all class files
-
 *.class
+
+# ignore JUnitTests
+Tests/
