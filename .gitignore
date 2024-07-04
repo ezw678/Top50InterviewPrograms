@@ -3,3 +3,11 @@
 
 # ignore JUnitTests
 Tests/
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.vscode
+.pytest_cache
+.hypothesis
