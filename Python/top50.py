@@ -61,7 +61,7 @@ to 1^3+5^3+3^3. You need to write a program to check if the given number is
 Armstrong number or not."""
 
 
-def ArmstrongNumber(n: int) -> bool:
+def armstrong_number(n: int) -> bool:
     temp = n
     sm = 0
     while temp > 0:
@@ -128,7 +128,7 @@ def del_dups_in_list_2(nums: list[int]) -> list[int]:
 # Write a program to print a pyramid pattern
 
 
-def printPattern(n: int) -> None:
+def print_pattern(n: int) -> None:
     for i in range(n):
         for j in range(n - i):
             print(" ", end="")

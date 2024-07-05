@@ -33,6 +33,18 @@ def test_find_sqrt(n: int):
     assert abs(find_sqrt(n) - math.sqrt(n)) <= 0.00000001
 
 
+def test_find_first_non_repeat_char_1():
+    assert find_first_non_repeat_char_1("hello") == "h"
+    assert find_first_non_repeat_char_1("programming") == "p"
+    assert find_first_non_repeat_char_1("preparing") == "e"
+
+
+def test_find_first_non_repeat_char_2():
+    assert find_first_non_repeat_char_2("hello") == "h"
+    assert find_first_non_repeat_char_2("programming") == "p"
+    assert find_first_non_repeat_char_2("preparing") == "e"
+
+
 @given(st.text())
 def test_find_first_non_repeat_char(s: str):
     assert find_first_non_repeat_char_1(s) == find_first_non_repeat_char_2(s)
@@ -43,7 +55,7 @@ def test_sort_algorithms(nums: list[int]):
     c1 = nums[:]
     insertion_sort(c1)
     c2 = nums[:]
-    insertion_sort(c2)
+    bubble_sort(c2)
     assert c1 == c2 == sorted(nums)
 
 
