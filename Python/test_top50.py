@@ -92,3 +92,12 @@ def test_post_order_traversal():
     lst = []
     post_order_traversal_recursive(root, lst)
     assert post_order_traversal(root) == lst
+
+
+@given(st.text(min_size=2, max_size=8))
+def test_str_permutation(word):
+    lst0 = []
+    str_permutation_1(word, 0, len(word) - 1, lst0)
+    lst1 = []
+    str_permutation_2(word, "", lst1)
+    assert sorted(lst0) == sorted(lst1)
