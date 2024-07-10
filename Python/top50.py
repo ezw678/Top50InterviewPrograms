@@ -269,10 +269,16 @@ def is_anagram(s1: str, s2: str) -> bool:
 
 
 def reverse_number_1(n: int) -> int:
-    return int(str(n)[::-1])
+    return int(str(n)[::-1]) if n >= 0 else int(str(n * (-1))[::-1]) * (-1)
 
 
 def reverse_number_2(n: int) -> int:
+    negative = False
+    if n < 0:
+        negative = True
+        n = n * -1
+
+    negative
     temp = n
     res = 0
     while temp > 0:
@@ -280,7 +286,10 @@ def reverse_number_2(n: int) -> int:
         res = res * 10 + d
         temp //= 10
 
-    return res
+    if not negative:
+        return res
+    else:
+        return res * -1
 
 
 # Write a program to find the first non-repeated character in a string
@@ -652,6 +661,23 @@ def reverse_linked_list(node: ListNode) -> ListNode:
         prior = cur
 
     return cur
+
+
+def reverse_linked_list_recursive(node: ListNode) -> ListNode:
+    if node == None:
+        return None
+
+    new_head = None
+
+    if node.next == None:
+        return node
+
+    new_head = reverse_linked_list_recursive(node.next)
+
+    node.next.next = node
+    node.next = None
+
+    return new_head
 
 
 # Find the length of the linked list

@@ -1,12 +1,22 @@
-from hypothesis import given, strategies as st
+from hypothesis import given, strategies as st, settings
+from hypothesis.strategies import recursive, integers, builds, none
 import math
-from .top50 import *
 from .tree_node import TreeNode, root
+from .top50 import *
 
 
 @given(st.integers(min_value=2, max_value=500))
 def test_int_palindrome(n: int):
     assert int_palindrome_1(n) == int_palindrome_2(n)
+
+
+def test_armstrong_number():
+    assert armstrong_number(153)
+    assert armstrong_number(371)
+    assert not armstrong_number(176)
+    assert armstrong_number(370)
+    assert not armstrong_number(111)
+    assert armstrong_number(407)
 
 
 @given(st.lists(st.integers(), min_size=0, max_size=50))
@@ -33,6 +43,29 @@ def test_find_sqrt(n: int):
     assert abs(find_sqrt(n) - math.sqrt(n)) <= 0.00000001
 
 
+def test_binary_search():
+    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    target = 12
+    assert binary_search(arr, target) == -1
+    target = 5
+    assert binary_search(arr, target) == 4
+    target = 8
+    assert binary_search(arr, target) == 7
+
+
+def test_reverse_number():
+    assert reverse_number_1(153) == 351
+    assert reverse_number_1(218) == 812
+    assert reverse_number_1(982) == 289
+    assert reverse_number_1(120) == 21
+    assert reverse_number_1(169) == 961
+
+
+@given(st.integers())
+def test_reverse_number(n: int):
+    assert reverse_number_1(n) == reverse_number_2(n)
+
+
 def test_find_first_non_repeat_char_1():
     assert find_first_non_repeat_char_1("hello") == "h"
     assert find_first_non_repeat_char_1("programming") == "p"
@@ -48,6 +81,30 @@ def test_find_first_non_repeat_char_2():
 @given(st.text())
 def test_find_first_non_repeat_char(s: str):
     assert find_first_non_repeat_char_1(s) == find_first_non_repeat_char_2(s)
+
+
+def tree_strategy(max_depth=5):
+    base = builds(TreeNode, integers(min_value=0, max_value=100))
+    return recursive(
+        base,
+        lambda children: builds(
+            TreeNode,
+            integers(min_value=0, max_value=100),
+            left=none() | children,
+            right=none() | children,
+        ),
+        max_leaves=2**max_depth,
+    )
+
+
+# Test function using Hypothesis with settings to limit execution time and iterations
+@settings(max_examples=100, deadline=1000)
+@given(tree=tree_strategy())
+def test_pre_order_traversal(tree):
+    actual = pre_order_traversal(tree)
+    expected = []
+    pre_order_traversal_recursive(tree, expected)
+    assert actual == expected, f"Actual: {actual}, Expected: {expected}"
 
 
 @given(st.lists(st.integers(), min_size=10, max_size=50))
@@ -70,6 +127,13 @@ def test_quicksort_1(nums: list[int]):
 def test_quicksort_2(nums: list[int]):
     nums_copy = nums[:]
     assert quicksort_2(nums_copy) == sorted(nums)
+
+
+@given(st.lists(st.integers()))
+def test_quicksort_preserves_length(nums):
+    nums_copy = nums.copy()
+    sorted_lst = quicksort_2(nums)
+    assert len(nums_copy) == len(sorted_lst), "Quicksort does not preserve list length"
 
 
 @given(st.lists(st.integers(), min_size=10, max_size=50))
@@ -102,3 +166,13 @@ def test_str_permutation(word):
     lst1 = []
     str_permutation_2(word, "", lst1)
     assert sorted(lst0) == sorted(lst1)
+
+
+def test_check_str_rotation():
+    assert check_str_rotation("abcd", "cdab") == True
+    assert check_str_rotation("abcd", "acbd") == False
+    assert check_str_rotation("AACD", "ACDA") == True
+    assert check_str_rotation("waterbottle", "erbottlewat") == True
+    assert check_str_rotation("hello", "lohel") == True
+    assert check_str_rotation("python", "thonpy") == True
+    assert check_str_rotation("abc", "cba") == False
