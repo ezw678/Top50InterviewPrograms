@@ -1,7 +1,10 @@
 import math
 import calendar
 from collections import Counter, deque
-from tree_node import TreeNode, root
+from .tree_node import TreeNode, root
+from .list_node import ListNode, head
+import re
+import numpy as np
 
 
 """Write a program which will print Fibonacci series, e.g. 1 1 2 3 5 8 13 ...
@@ -193,6 +196,29 @@ def find_sqrt(n: float) -> float:
     return math.nan
 
 
+# Reverse array in place
+
+
+def reverse_array_in_place(nums: list[int]):
+    l, r = 0, (ln := len(nums)) - 1
+
+    if ln <= 1:
+        return nums
+
+    while l <= r:
+        nums[l], nums[r] = nums[r], nums[l]
+        l += 1
+        r -= 1
+
+
+# Reverse words of a sentence
+
+
+def reverse_words_in_sentence(sentence: str) -> str:
+    words = re.split(r"\s", sentence)
+    return " ".join([w[::-1] for w in words])
+
+
 # Write a program to find if a year is a leap year or not
 
 
@@ -370,6 +396,7 @@ def post_order_traversal(node: TreeNode) -> list[int]:
 def print_all_nodes_breadth_first(node: TreeNode) -> None:
     queue = deque[TreeNode]()
     queue.append(node)
+
     while queue:
         temp = queue.popleft()
         if temp:
@@ -423,10 +450,10 @@ def partition(nums: list[int], left: int, right: int) -> int:
 
 
 def quicksort_2(nums: list[int]) -> list[int]:
-    if len(nums) <= 1:
+    if (ln := len(nums)) <= 1:
         return nums
 
-    pivot = nums[len(nums) // 2]
+    pivot = nums[ln // 2]
     left = [x for x in nums if x < pivot]
     middle = [x for x in nums if x == pivot]
     right = [x for x in nums if x > pivot]
@@ -541,6 +568,266 @@ def str_permutation_2(word: str, temp: str, strs: list[str]):
     else:
         for i in range(ln):
             str_permutation_2(word[:i] + word[i + 1 :], temp + word[i], strs)
+
+
+# Add two matrices
+
+
+def matrix_addition_1(a: list[list[int]], b: list[list[int]]):
+    rows_a = len(a)
+    cols_a = len(a[0])
+
+    rows_b = len(b)
+    cols_b = len(b[0])
+
+    if rows_a != rows_b or cols_a != cols_b:
+        return []
+
+    for i in range(rows_a):
+        for j in range(cols_a):
+            a[i][j] += b[i][j]
+
+    return a
+
+
+def matrix_addition_2(a: list[list[int]], b: list[list[int]]):
+    arr1 = np.array(a)
+    arr2 = np.array(b)
+
+    if arr1.shape != arr2.shape:
+        return []
+
+    return arr1 + arr2
+
+
+# Multiply two matrices
+
+
+def matrix_multiplication_1(a: list[list[int]], b: list[list[int]]):
+    rows_a = len(a)
+    cols_a = len(a[0])
+
+    rows_b = len(b)
+    cols_b = len(b[0])
+
+    if cols_a != rows_b:
+        return []
+
+    nm = [[0 for _ in range(cols_b)] for _ in range(rows_a)]
+    for i in range(rows_a):
+        for j in range(cols_b):
+            for k in range(rows_b):
+                nm[i][j] += a[i][k] * b[k][j]
+
+    return nm
+
+
+def matrix_multiplication_2(a: list[list[int]], b: list[list[int]]) -> list[list[int]]:
+    rows_a = len(a)
+    cols_a = len(a[0])
+
+    rows_b = len(b)
+    cols_b = len(b[0])
+
+    if cols_a != rows_b:
+        return []
+
+    return np.dot(a, b)
+
+
+# Reverse a linked list
+
+
+def reverse_linked_list(node: ListNode) -> ListNode:
+    if node == None:
+        return
+
+    temp = node
+    prior = None
+    cur = None
+    while temp:
+        cur = temp
+        temp = temp.next
+        cur.next = prior
+        prior = cur
+
+    return cur
+
+
+# Find the length of the linked list
+
+
+def find_linked_list_length_1(node: ListNode) -> int:
+    if node == None:
+        return 0
+
+    temp = node
+    count = 0
+    while temp:
+        count += 1
+        temp = temp.next
+
+    return count
+
+
+def find_linked_list_length_2(node: ListNode) -> int:
+    if node == None:
+        return 0
+
+    return 1 + find_linked_list_length_2(node.next)
+
+
+# Check if a linked list has a loop
+
+
+def is_linked_list_cyclical(node: ListNode) -> bool:
+    if node == None:
+        return False
+
+    fast_node = node
+    slow_node = node
+    while fast_node.next != None and fast_node.next != None:
+        fast_node = fast_node.next.next
+        slow_node = slow_node.next
+        if fast_node == slow_node:
+            return True
+
+    return False
+
+
+# Find the start of loop in a linked list
+
+
+def find_start_of_loop_in_linked_list(node: ListNode) -> int:
+    if node == None:
+        return 0
+
+    fast_node = node
+    slow_node = node
+
+    is_cyclical = False
+    while fast_node != None and fast_node.next != None:
+        fast_node = fast_node.next.next
+        slow_node = slow_node.next
+        if fast_node == slow_node:
+            is_cyclical = True
+            slow_node = node
+            break
+
+    if not is_cyclical:
+        return math.nan
+    else:
+        while fast_node != slow_node:
+            fast_node = fast_node.next
+            slow_node = slow_node.next
+            if fast_node == slow_node:
+                return slow_node.data
+
+    return math.nan
+
+
+# Find the middle element of a linked list
+
+
+def find_middle_element_of_linked_list(node: ListNode) -> int:
+    if node == None:
+        return math.nan
+
+    fast_node = node
+    slow_node = node
+
+    while True:
+        if fast_node.next == None:
+            return slow_node.data
+
+        if fast_node.next.next == None:
+            return slow_node.next.data
+
+        fast_node = fast_node.next.next
+        slow_node = slow_node.next
+
+    return math.nan
+
+
+# Find the 3rd element from the tail linked list
+
+
+def find_3rd_elem_from_tail_of_linked_list(node: ListNode) -> int:
+    if node == None or node.next == None or node.next.next == None:
+        return -1
+
+    fast_node = node.next.next
+    slow_node = node
+
+    while fast_node.next != None:
+        fast_node = fast_node.next
+        slow_node = slow_node.next
+
+    return slow_node.data
+
+
+# Convert a linked list to a binary tree
+
+
+def convert_linked_list_to_binary_tree(node: ListNode) -> TreeNode:
+    if node == None:
+        return None
+
+    temp = node
+    root = TreeNode(temp.data)
+    queue = deque[TreeNode]()
+    queue.append(root)
+
+    temp = temp.next
+    while queue:
+        parent = queue.popleft()
+        if temp:
+            left = TreeNode(temp.data)
+            parent.add_left(left)
+            queue.append(left)
+            temp = temp.next
+
+        if temp:
+            right = TreeNode(temp.data)
+            parent.add_right(right)
+            queue.append(right)
+            temp = temp.next
+
+    return root
+
+
+# Sort a linked list
+
+
+def sort_linked_list(node: ListNode) -> None:
+    if node == None:
+        return
+
+    nums = []
+    while node:
+        nums.append(node.data)
+        node = node.next
+
+    nums.sort()
+    head = ListNode()
+    cur = ListNode()
+    for k, v in enumerate(nums):
+        temp = ListNode(v)
+        if k == 0:
+            head = temp
+            cur = head
+        else:
+            cur.next = temp
+            cur = cur.next
+
+    return head
+
+
+# Check if two string rotation of each other
+
+
+def check_str_rotation(s1: str, s2: str) -> bool:
+    return s2 in s1 * 2 if len(s1) == len(s2) else False
 
 
 def main():

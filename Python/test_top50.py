@@ -1,7 +1,7 @@
 from hypothesis import given, strategies as st
 import math
-from top50 import *
-from tree_node import TreeNode, root
+from .top50 import *
+from .tree_node import TreeNode, root
 
 
 @given(st.integers(min_value=2, max_value=500))
@@ -68,7 +68,8 @@ def test_quicksort_1(nums: list[int]):
 
 @given(st.lists(st.integers(), min_size=10, max_size=50))
 def test_quicksort_2(nums: list[int]):
-    assert quicksort_2(nums) == sorted(nums)
+    nums_copy = nums[:]
+    assert quicksort_2(nums_copy) == sorted(nums)
 
 
 @given(st.lists(st.integers(), min_size=10, max_size=50))
